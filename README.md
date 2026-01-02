@@ -1,2 +1,3 @@
-# TIL-Embedded
-🧠 Today I Learned
+## TODAY I LEARNED ✍️
+
+프로젝트들을 위해 따로 공부하는 임베디드 트랙 TIL입니다 . .
