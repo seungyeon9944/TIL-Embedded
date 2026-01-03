@@ -66,7 +66,9 @@ Micro Electro Mechanical Systems, 반도체 제조 공정으로 만드는 초소
 ---
 
 ## Sense Hat
-센서들이 모여있는 Hat으로 자이로 센서, 가속도 센서, 기압 센서, 지자기 센서, 온/습도 센서 등 ..
+![Sense Hat](https://www.raspberrypi.com/documentation/accessories/images/Sense-HAT.jpg)
+
+자이로 센서, 가속도 센서, 기압 센서, 지자기 센서, 온/습도 센서 등의 센서들이 모여있는 Hat
 
 ### 온습도 센서
 - **실크** : **U3** → `datasheets.raspberrypi.com`에서 sensehat 찾아서 U3 검색 → U3의 부품명인 HTS221의 pdf를 구글에서 검색 → 부품 스펙 가늠
