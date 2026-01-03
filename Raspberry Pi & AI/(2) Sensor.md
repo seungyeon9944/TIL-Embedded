@@ -1,14 +1,14 @@
 ## 아날로그 신호
 
-`pinMode( )` : 지정된 핀을 input 또는 output으로 동작하도록 구성.
+`pinMode()` : 지정된 핀을 input 또는 output으로 동작하도록 구성.
 
 근데 gpiozero 라이브러리는 쉽게 사용할 수 있도록 wrapping 되어있다
 
 ### PWM
-Pulse Width Modulation (펄스 폭 변조),
-**디지털 신호를 빠르게 스위칭**하여 마치 아날로그처럼 보이도록 출력
+Pulse Width Modulation (펄스 폭 변조)으로, **디지털 신호를 빠르게 스위칭**하여 마치 아날로그처럼 보이도록 출력
 
-### PWMLED 모듈로 PWM 신호 출력
+ex) PWMLED 모듈로 PWM 신호 출력
+
 `$vi pwm.py`
 
 `$python3 pwm.py`
@@ -38,6 +38,8 @@ while True:
 - Duty Rate 듀티비
 - 주파수 *f* = 1/T (Hz)
 
+<br/>
+
 - milli (m) : 10^(-3)
 - micro (μ) : 10^(-6)
 - nano (n) : 10^(-9)
@@ -64,22 +66,23 @@ Micro Electro Mechanical Systems, 반도체 제조 공정으로 만드는 초소
 ---
 
 ## Sense Hat
-센서들이 모여있는 Hat (자이로 센서, 가속도 센서, 기압 센서, 지자기 센서, 온/습도 센서 등 ..)
+센서들이 모여있는 Hat으로 자이로 센서, 가속도 센서, 기압 센서, 지자기 센서, 온/습도 센서 등 ..
 
 ### 온습도 센서
-**실크**에 U3이라고 적혀있음 → `datasheets.raspberrypi.com`에서 sensehat 찾아서 U3 검색 → U3의 부품명인 HTS221의 pdf를 구글에서 검색 → 부품 스펙 가늠
+- **실크** : **U3** → `datasheets.raspberrypi.com`에서 sensehat 찾아서 U3 검색 → U3의 부품명인 HTS221의 pdf를 구글에서 검색 → 부품 스펙 가늠
 
 ### IMU
-Inertial Measurement Unit 관성 측정 장치로 드론/자동차/선박 등 다양한 임베디드 장치에서 사용.
-
-센스햇은 9축 센서이고 실크는 U4 → `datasheets.raspberrypi.com`에서 sensehat 찾아서 U4 검색 → U4의 부품 모델명 pdf 찾기
+- Inertial Measurement Unit 관성 측정 장치로 드론/자동차/선박 등 다양한 임베디드 장치에서 사용
+- 센스햇은 9축 센서
+- 실크 : **U4** → `datasheets.raspberrypi.com`에서 sensehat 찾아서 U4 검색 → U4의 부품 모델명 pdf 찾기
 
 ### 기압센서
-실크 : U5 .. 동일한 방식으로
+- 실크 : **U5**
 
 ### LED Matrix
-Driver를 이용하여 제어 .. U7
+- Driver를 이용하여 제어 
+- 실크 : **U7**
 
-### 조이스틱 - 버튼
-- 좌/우/위/아래/클릭 5개 버튼
-- 실크 : J2
+### 조이스틱 
+- 좌/우/위/아래/클릭 5개 **버튼**
+- 실크 : **J2**
