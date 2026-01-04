@@ -107,8 +107,15 @@ import numpy as np
 - src : 입력 이미지 (NumPy 배열)
 - code : 색상 공간 변환 코드
     - COLOR_BGR2GRAY : grayscale으로 변환
+- 많은 OpenCV 알고리즘은 색상이 아닌 **밝기(명암도) 기준**으로 동작
+    - Canny Edge Detection, Thresholding, Contour Detection, Corner Detection 등등
+- 컬러 이미지보다 **월등히 빠른 계산량**
+    - 컬러 이미지는 RGB 3채널이지만, 흑백 이미지는 1채널
+    - 처리해야 할 데이터양이 1/3으로 줄어듦
 
 ### `threshold(src, thresh, maxval, type)`
+![threshold](https://i.imgur.com/2ItCg2A.png)
+
 - Grayscale(회색조) 이미지를 Binary(이진, 흑백) 이미지로 변환하는 API
 - 임계값(threshold)를 기준으로 픽셀 값을 0 또는 255로 바꿈
 - 윤곽선 검출 전 이진화, 마스크 생성, 객체 분할, 문서 스캔 이미지에서 배경 제거에 사용
