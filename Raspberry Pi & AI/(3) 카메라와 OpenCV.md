@@ -84,12 +84,16 @@ import numpy as np
     - 파일 읽기 실패하면 None 반환
 
 ### `blur(src, ksize)`
+![blur](https://i.imgur.com/iZnaz9U.png)
+
 - 평균 블러(average blur) 처리 함수
 - 이미지에서 노이즈 줄이거나 부드럽게 표현하고자 할 때
 - src : 원본 이미지
 - ksize : 커널 크기 (width x height)
 
 ### `GaussianBlur(src, ksize, sigmaX)`
+![gaussain blur](https://i.imgur.com/DSpRf1Q.png)
+
 - 가우시안 커널 사용하여 이미지를 부드럽게 블러처리
 - 일반 블러보다 더 자연스럽고 노이즈 제거에 효과적
 - src : 원본 이미지
@@ -97,6 +101,8 @@ import numpy as np
 - sigmaX : X 방향 가우시안 커널 표준 편차, 0이면 자동 계산
 
 ### `cvtColor(src, code)`
+![gray](https://i.imgur.com/1cqRrGt.png)
+
 - 이미지 색상 공간 변환하는 API
 - src : 입력 이미지 (NumPy 배열)
 - code : 색상 공간 변환 코드
@@ -115,6 +121,7 @@ import numpy as np
     - dst : 결과 이미지
 
 ### `morphologyEx(img, operation, kernel)`
+![morphology](https://i.imgur.com/4wJbvil.png)
 - 고급 모폴로지 변환 함수
 - 바이너리 마스크, 외곽선 추출, 노이즈 제거, 윤곽 강조 등에 유용
 - src : 입력 이미지 (흑백 or 바이너리 이미지)
@@ -122,6 +129,8 @@ import numpy as np
 - kernel : 구조화 요소, 주로 np.ones()로 생성
 
 ### `Canny(image, threshold1, threshold2)`
+![canny](https://i.imgur.com/gsAJpGY.png)
+
 - 엣지(윤곽선) 검출 API
 - 이미지에서 명확한 경계선 찾을 때
 - 가장 빠르고 정확한 결과
