@@ -157,3 +157,275 @@ import numpy as np
 ---
 
 ## OpenCV 응용
+
+### Motion Detecting
+영상이나 센서 데이터를 분석하여 물체의 움직임 탐지
+- 카메라 기반 모션 감지 : CCTV, 영상 감시, 로봇 비전 등
+- 적외선 센서 기반 모션 감지 : 자동문, 출입 자동 조명 등
+
+이미지 프레임의 변화량을 박스로 표시 !
+
+1. 카메라 설정 및 시작
+```
+import cv2
+from picamera2 import Picamera2
+
+picam2 = Picamera2()
+picam2.preview_configuration.main.size = (224,224)
+picam2.preview_configuration.main.format = "RGB888"
+picam2.configure("preview")
+
+picam2.start()
+```
+
+2. 전역 변수 및 함수 정의 + 회색조 변화나 및 블러 적용 + 기준 프레임 설정
+```
+avg = None
+
+def motionDetect(frame):
+    global avg
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (21,21), 0)
+
+    if avg is None:
+        avg = gray.copy().astype("float")
+        return frame
+```
+
+3. 프레임 업데이트 및 프레임 차이 계산
+- `accumulateWeighted()` : 현재 프레임을 기준 프레임과 비교하기 위해 누적 평균을 적용하면서 업데이트 (노이즈 완화)
+- `absdiff()` : 현재 프레임과 기준 프레임의 차이 계산 (차이가 클 수록 움직임이 있다)
+
+```
+cv2.accumulateWeighted(gray, avg, 0.5)
+
+frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
+```
+
+4. 이진 이미지로 변환 + 윤곽 검출
+- `threshold()`: 임계값 적용해 차이가 큰 부분을 흰색(255), 나머지는 검정(0)으로 변환
+- `dilate`: 팽창처리, low level 모폴로지, 윤곽선을 더 확실하게 만듦
+- `findContours()` : 윤곽선 찾는 함수 
+
+```
+thresh = cv2.threshold(frameDelta, 5, 255, cv2.THRESH_BINARY)[1]
+thresh = cv2.dilate(thresh, None, iterations=2)
+
+cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+```
+
+5. 윤곽선 기준으로 모션 판단
+```
+motion_detected = Flase
+
+for c in cnts:
+    if cv2.contourArea(c) < 50:
+        continue
+    (x, y, w, h) = cv2.boundingRect(c)
+    cv2.rectangle(frame, (x, y), (x+w, y+h), (128, 255, 0), 1)
+    motion_detected = True
+
+if motion_detected:
+    print("Motion Detecting")
+else:
+    print("No Movement")
+
+return frame
+```
+
+6. main() 함수
+```
+def main():
+    while True:
+        frame = picam2.capture_array()
+        frame = motionDetect(frame)
+        cv2.imshow("Motion Detection", frame)
+
+        if cv2.waitKey(1) & oxFF == ord('q'):
+            break
+    
+    picam2.stop()
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    main()
+```
+
+### Color Recognition
+```
+import cv2
+from picamera2 import Picamera2
+
+picam2 = Picamera2()
+picam2.preview_configuration.main.size = (224, 224)
+picam2.preview_configuration.main.format = "RGB888"
+picam2.configure("preview")
+
+picam2.start()
+```
+
+1. 색상 인식 함수
+```
+def colorRecognition(frame):
+    height, width = frame.shape[:2]
+    cx, cy = width // 2, height // 2
+    
+    box_size = 10
+    top_left = (cx - box_size, cy - box_size)
+    bottom_right = (cx + box_size, cy + box_size)
+    cv2.rectangle(frame, top_left, bottom_right, (255, 255, 255), 1)
+```
+
+2. 색상 인식을 위한 준비 및 HSV 값 추출
+- HSV는 색상(H), 채도(S), 명도(V)로 구성되어 밝기와 색을 독립적으로 처리 가능하고 색 추적 범우 지정이 쉬움
+```
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    hsv = cv2.blur(hsv, (15, 15))
+
+    hsvValue = hsv[cy, cx]
+
+    text = f"HSV: {hsvValue}"
+    cv2.putText(frame, text, (cx - 60, cy + 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
+
+    return frame
+```
+
+3. main() 함수
+```
+def main():
+    while True:
+        frame = picam2.capture_array()
+        frame = colorRecognition(frame)
+        cv2.imshow("Color Recognition", frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    picam2.stop()
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    main()
+```
+
+### Color Tracking
+프레임에서 특정 지은 색의 범위에 해당하는 색상 찾으면 방향 표시
+
+1. 인식할 색상의 범위 지정
+- 색상 인식은 환경에 민감하므로 검색이 아닌 실험을 통해 구한다
+```
+import cv2
+from picamera2 import Picamera2
+import numpy as np
+
+picam2 = Picamera2()
+picam2.preview_configuration.main.size = (224, 224)
+picam2.preview_configuration.main.format = "RGB888"
+picam2.configure("preview")
+
+picam2.start()
+
+#Yellow #FFFF00
+colorUpper = np.array([44, 255, 255])
+colorLower = np.array([24, 100, 100])
+```
+
+2. 색상 추적 함수
+```
+def colorTracking(frame):
+    height, width = frame.shape[:2]
+    cx, cy = width // 2, height // 2
+
+    box_size = 10
+    top_left = (cx - box_size, cy - box_size)
+    bottom_right = (cx + box_size, cy + box_size)
+    cv2.rectangle(frame, top_left, bottom_right, (255, 255, 255), 1)
+```
+
+3. 색상 추적을 위한 마스킹 및 윤곽선 찾기
+```
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    
+    mask = cv2.inRange(hsv, colorLower, colorUpper)
+    mask = cv2.erode(mask, None, iterations=2)
+    mask = cv2.dilate(mask, None, iterations=2)
+    
+    cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+```
+
+4. 윤곽선이 1개라도 존재하면 색상 인식
+- 가장 큰 윤곽선을 외접한 최소 원의 중심 좌표 및 반지름 구하기
+```
+    if len(cnts) > 0:
+        print("Target Detected")
+        
+        c = max(cnts, key=cv2.contourArea)
+        
+        ((box_x, box_y), radius) = cv2.minEnclosingCircle(c)
+        
+        cv2.rectangle(frame,(int(box_x-radius),int(box_y+radius)),(int(box_x+radius),int(box_y-radius)),(0,255,0),1)
+```
+
+5. 중심 좌표로부터 거리 구하기
+- 인식된 색상의 중심 좌표(정수)
+- tolerance : 허용 오차
+- 방향 표기용 변수
+
+- up/down/left/right 방향 구하기
+```
+        X = int(box_x)
+        Y = int(box_y)       
+        
+        tolerance = 10
+        dir_y = ""
+        dir_x = ""
+
+        if Y < cy - tolerance:
+            dir_y = "up"
+        elif Y > cy + tolerance:
+            dir_y = "down"
+
+        if X < cx - tolerance:
+            dir_x = "left"
+        elif X > cx + tolerance:
+            dir_x = "right"
+```
+
+6. 화면에 방향 표기
+```
+        if dir_y == "" and dir_x == "":
+            direction = "center"
+        elif dir_y == "":
+            direction = dir_x
+        elif dir_x == "":
+            direction = dir_y
+        else:
+            direction = f"{dir_y}-{dir_x}"
+
+        cv2.putText(frame, direction, (10, height - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+                    
+    else:
+        print("None")
+    
+    return frame
+```
+
+7. main() 함수
+```
+def main():
+    while True:
+        frame = picam2.capture_array()
+        frame = colorTracking(frame)
+        cv2.imshow("Color Tracking", frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    picam2.stop()
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    main()
+```
