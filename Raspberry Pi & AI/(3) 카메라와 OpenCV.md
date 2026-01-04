@@ -82,6 +82,8 @@ import numpy as np
 - return
     - 파일 잘 읽어오면 NumPy 배열 형태로
     - 파일 읽기 실패하면 None 반환
+    
+<br/>
 
 ### `blur(src, ksize)`
 
@@ -92,6 +94,8 @@ import numpy as np
 - src : 원본 이미지
 - ksize : 커널 크기 (width x height)
 
+<br/>
+
 ### `GaussianBlur(src, ksize, sigmaX)`
 
 <img src="https://i.imgur.com/DSpRf1Q.png" alt="gaussianblur" width="500px">
@@ -101,6 +105,8 @@ import numpy as np
 - src : 원본 이미지
 - ksize : 커널 크기
 - sigmaX : X 방향 가우시안 커널 표준 편차, 0이면 자동 계산
+
+<br/>
 
 ### `cvtColor(src, code)`
 
@@ -115,6 +121,8 @@ import numpy as np
 - 컬러 이미지보다 **월등히 빠른 계산량**
     - 컬러 이미지는 RGB 3채널이지만, 흑백 이미지는 1채널
     - 처리해야 할 데이터양이 1/3으로 줄어듦
+
+<br/>
 
 ### `threshold(src, thresh, maxval, type)`
 
@@ -131,6 +139,8 @@ import numpy as np
     - retval : 계산된 임계값
     - dst : 결과 이미지
 
+<br/>
+
 ### `morphologyEx(img, operation, kernel)`
 
 <img src="https://i.imgur.com/4wJbvil.png" alt="morphology" width="500px">
@@ -140,6 +150,8 @@ import numpy as np
 - src : 입력 이미지 (흑백 or 바이너리 이미지)
 - operation : 모폴로지 연산 종류
 - kernel : 구조화 요소, 주로 np.ones()로 생성
+
+<br/>
 
 ### `Canny(image, threshold1, threshold2)`
 
@@ -252,6 +264,8 @@ if __name__ == '__main__':
     main()
 ```
 
+<br/>
+
 ### Color Recognition
 ```
 import cv2
@@ -308,6 +322,8 @@ def main():
 if __name__ == '__main__':
     main()
 ```
+
+<br/>
 
 ### Color Tracking
 프레임에서 특정 지은 색의 범위에 해당하는 색상 찾으면 방향 표시
