@@ -10,15 +10,4 @@ torch의 기본 단위로 다차원 배열을 나타내는 데이터 구조
 
 ### 따라서, NumPy와 PyToch의 호환성이 매우 중요하다
 
----
-
-## ChatGPT 프롬프트 활용
-
----
-
-## OpenAI API 사용
-
----
-
-## LED Controller 프로젝트 
 
