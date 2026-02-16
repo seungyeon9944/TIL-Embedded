@@ -38,7 +38,7 @@
 
 - 속도를 **누적(적분)하면 이동량**
 - 로봇은 회전을 하기 때문에 회전에 대한 값을 고려해줌
-    - **로봇이 바라보고 있는 방향(헤딩)**에 따라 이동하는 축이 달라짐
+    - **로봇이 바라보고 있는 방향(헤딩)** 에 따라 이동하는 축이 달라짐
 
 ![Odometry 계산 수식](https://i.imgur.com/T2d2plX.png)
 
@@ -65,19 +65,19 @@
 ### 물체의 자세
 기준 좌표계에서 물체가 얼마나 회전되어있는지
 - **오일러각**
-    - 물체의 자세를 Roll Pitch Yaw 3가지로 표현하는 방법
+    - 물체의 자세를 **Roll Pitch Yaw** 3가지로 표현하는 방법
     - 직관적으로 이해하기 쉬움
-    - 몇몇 자세를 표현하지 못하는 짐벌락 현상이 있음
+    - 몇몇 자세를 표현하지 못하는 **짐벌락** (Gimbal Lock) 현상이 있음. ex) pitch = 90°일 때 roll과 yaw가 같은 축이 되어버려서 자유도 하나가 사라짐 ! 로봇 입장에서는 갑자기 orientation 계산이 이상해지고 회전이 튐
 
 - **쿼터니언**
-    - 물체의 자세를 X Y Z W 4가지 변수를 표현하는 방법
+    - 물체의 자세를 **X Y Z W** 4가지 변수를 표현하는 방법
     - 직관적으로 판별하기 어려움
-    - 모든 자세를 표현할 수 있으며 빠른 연산처리가 가능하여 컴퓨터그래픽에서 주로 사용하는 좌표계
+    - 모든 자세를 표현할 수 있으며 빠른 연산처리가 가능하여 **컴퓨터**그래픽에서 주로 사용하는 좌표계 (ROS2도 orientation을 항상 Quaternion으로 저장)
 
 ![오일러각과 쿼터니언](https://i.imgur.com/f2wduY7.png)
 
-- 굳이 수식을 변환 수식을 구현할 필요 없이 미리 구현되어있는 squaternion이라는 모듈 사용
-- 오일러각 → 쿼터니언 변환 수식
+- 굳이 수식을 변환 수식을 구현할 필요 없이 미리 구현되어있는 `squaternion`이라는 모듈 사용
+- **오일러각 → 쿼터니언** 변환 수식
 ```
 from squaternion import Quaternion
 from math import pi
@@ -89,7 +89,7 @@ yaw = pi/6
 q = Quaternion.from_euler(roll,pitch,yaw)
 ```
 
-- 쿼터니언 → 오일러각 변환 수식
+- **쿼터니언 → 오일러각** 변환 수식
 ```
 from squaternion import Quaternion
 from math import pi
@@ -106,4 +106,4 @@ roll,pitch,yaw=q.to_euler()
 - ROS2에서 `nav_msgs/Path` 메시지 타입 이용
     - 사용해야 하는 메시지의 필드는 다음과 같다
     - header의 frame_id : 기준좌표계의 이름
-    - poses : 경로점들을 가지고 있는 배열 (경로점들은 pose에서 position 위치 와 orientation 쿼터니안으로 이루어져 있음)
+    - poses : 경로점들을 가지고 있는 배열 (경로점들은 pose에서 position과 orientation으로 이루어져 있음)
