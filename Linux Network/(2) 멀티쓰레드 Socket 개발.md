@@ -345,10 +345,18 @@ int main(int argc, char *argv[]){
 
 ## OSI 7 Layer
 
+<br/>
+
 ---
+
+<br/>
 
 ## 네트워크
 
--- 
+<br/>
+
+---
+
+<br/>
 
 ## Ethernet
