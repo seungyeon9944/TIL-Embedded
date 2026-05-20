@@ -347,7 +347,7 @@ int main(int argc, char *argv[]){
 
 ISO에서 정한, 통신의 추상화 단계
 
-![OSI 7계층](https://westahn.com/wp-content/uploads/2024/02/OSI7OSI4-1024x532.png)
+![OSI 7계층](https://i.imgur.com/b8qVx3o.png)
 
 ### 계층화를 통한 장점
 **커뮤니케이션 용도**
