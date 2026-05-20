@@ -1,3 +1,4 @@
-## TODAY I LEARNED ✍️
+## ✍️ TIL 
+#### TODAY I LEARNED !
 
-프로젝트들을 위해 따로 공부하는 임베디드 트랙 + 임베디드로봇 트랙 TIL입니다
+따로 공부하는 SSAFY 임베디드 트랙 및 임베디드로봇 트랙의 TIL입니다
